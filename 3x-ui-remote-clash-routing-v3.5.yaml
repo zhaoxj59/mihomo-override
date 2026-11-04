@@ -251,4 +251,3 @@ rules:
   - RULE-SET,proxy,国际网站
   - RULE-SET,gfw,国际网站
   - RULE-SET,tld-not-cn,国际网站
-  - MATCH,漏网之鱼
