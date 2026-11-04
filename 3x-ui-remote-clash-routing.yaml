@@ -1,127 +1,46 @@
-# 3x-ui 3.7+ Remote Routing YAML
-# Only routing graph fields. The panel-generated proxies and PROXY group are retained.
-proxy-groups:
-  - name: 默认代理
-    type: select
-    proxies: [PROXY, DIRECT]
-  - name: AI
-    type: select
-    proxies: [PROXY, DIRECT]
-  - name: Google
-    type: select
-    proxies: [PROXY, DIRECT]
-  - name: YouTube
-    type: select
-    proxies: [PROXY, DIRECT]
-  - name: FCM推送
-    type: select
-    proxies: [Google, PROXY, DIRECT]
-  - name: GitHub
-    type: select
-    proxies: [PROXY, DIRECT]
-  - name: Telegram
-    type: select
-    proxies: [PROXY, DIRECT]
-  - name: 国内网站
-    type: select
-    proxies: [DIRECT, PROXY]
-  - name: 国际网站
-    type: select
-    proxies: [默认代理, PROXY, DIRECT]
-  - name: 广告拦截
-    type: select
-    proxies: [REJECT, DIRECT]
-  - name: 漏网之鱼
-    type: select
-    proxies: [默认代理, PROXY, DIRECT]
-
-rule-providers:
-  reject:
-    type: http
-    behavior: domain
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
-    path: ./ruleset/remote-reject.txt
-    interval: 86400
-  private:
-    type: http
-    behavior: domain
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
-    path: ./ruleset/remote-private.txt
-    interval: 86400
-  direct:
-    type: http
-    behavior: domain
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
-    path: ./ruleset/remote-direct.txt
-    interval: 86400
-  proxy:
-    type: http
-    behavior: domain
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
-    path: ./ruleset/remote-proxy.txt
-    interval: 86400
-  gfw:
-    type: http
-    behavior: domain
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
-    path: ./ruleset/remote-gfw.txt
-    interval: 86400
-  google:
-    type: http
-    behavior: domain
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
-    path: ./ruleset/remote-google.txt
-    interval: 86400
-  telegramcidr:
-    type: http
-    behavior: ipcidr
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
-    path: ./ruleset/remote-telegramcidr.txt
-    interval: 86400
-  cncidr:
-    type: http
-    behavior: ipcidr
-    format: text
-    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
-    path: ./ruleset/remote-cncidr.txt
-    interval: 86400
+# 3x-ui 3.7+ Remote Routing YAML — SAFE VERSION
+# Only adds routing rules. Do NOT add top-level proxies: or proxy-groups: here.
+# 3x-ui generates the PROXY group from the subscriber's real nodes.
+# No MATCH rule: 3x-ui keeps its own final MATCH,PROXY fallback.
 
 rules:
-  - RULE-SET,private,DIRECT
-  - RULE-SET,reject,广告拦截
-  - DOMAIN-SUFFIX,mtalk.google.com,FCM推送
-  - DOMAIN-SUFFIX,openai.com,AI
-  - DOMAIN-SUFFIX,chatgpt.com,AI
-  - DOMAIN-SUFFIX,oaistatic.com,AI
-  - DOMAIN-SUFFIX,oaiusercontent.com,AI
-  - DOMAIN-SUFFIX,anthropic.com,AI
-  - DOMAIN-SUFFIX,claude.ai,AI
-  - DOMAIN-SUFFIX,gemini.google.com,AI
-  - DOMAIN-SUFFIX,perplexity.ai,AI
-  - DOMAIN-SUFFIX,muse.ai,AI
-  - DOMAIN-SUFFIX,play.google.com,Google
-  - DOMAIN-SUFFIX,play.googleapis.com,Google
-  - DOMAIN-SUFFIX,googleapis.cn,Google
-  - DOMAIN-SUFFIX,android.clients.google.com,Google
-  - DOMAIN-SUFFIX,youtube.com,YouTube
-  - DOMAIN-SUFFIX,youtu.be,YouTube
-  - DOMAIN-SUFFIX,googlevideo.com,YouTube
-  - DOMAIN-SUFFIX,github.com,GitHub
-  - DOMAIN-SUFFIX,githubusercontent.com,GitHub
-  - DOMAIN-SUFFIX,t.me,Telegram
-  - DOMAIN-SUFFIX,telegram.org,Telegram
-  - RULE-SET,google,Google
-  - RULE-SET,telegramcidr,Telegram,no-resolve
-  - RULE-SET,direct,国内网站
-  - RULE-SET,cncidr,国内网站,no-resolve
-  - GEOIP,CN,国内网站,no-resolve
-  - RULE-SET,proxy,国际网站
-  - RULE-SET,gfw,国际网站
-  - MATCH,漏网之鱼
+  # AI services
+  - DOMAIN-SUFFIX,openai.com,PROXY
+  - DOMAIN-SUFFIX,chatgpt.com,PROXY
+  - DOMAIN-SUFFIX,oaistatic.com,PROXY
+  - DOMAIN-SUFFIX,oaiusercontent.com,PROXY
+  - DOMAIN-SUFFIX,anthropic.com,PROXY
+  - DOMAIN-SUFFIX,claude.ai,PROXY
+  - DOMAIN-SUFFIX,gemini.google.com,PROXY
+  - DOMAIN-SUFFIX,perplexity.ai,PROXY
+  - DOMAIN-SUFFIX,muse.ai,PROXY
+
+  # Google / YouTube
+  - DOMAIN-SUFFIX,google.com,PROXY
+  - DOMAIN-SUFFIX,googleapis.com,PROXY
+  - DOMAIN-SUFFIX,gstatic.com,PROXY
+  - DOMAIN-SUFFIX,googlevideo.com,PROXY
+  - DOMAIN-SUFFIX,youtube.com,PROXY
+  - DOMAIN-SUFFIX,youtu.be,PROXY
+  - DOMAIN-SUFFIX,ytimg.com,PROXY
+  - DOMAIN-SUFFIX,play.google.com,PROXY
+
+  # FCM push
+  - DOMAIN,mtalk.google.com,PROXY
+
+  # GitHub / Telegram
+  - DOMAIN-SUFFIX,github.com,PROXY
+  - DOMAIN-SUFFIX,githubusercontent.com,PROXY
+  - DOMAIN-SUFFIX,githubassets.com,PROXY
+  - DOMAIN-SUFFIX,telegram.org,PROXY
+  - DOMAIN-SUFFIX,t.me,PROXY
+  - DOMAIN-SUFFIX,telegra.ph,PROXY
+
+  # Mainland China common domains go direct
+  - DOMAIN-SUFFIX,cn,DIRECT
+  - DOMAIN-SUFFIX,baidu.com,DIRECT
+  - DOMAIN-SUFFIX,qq.com,DIRECT
+  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
+  - DOMAIN-SUFFIX,taobao.com,DIRECT
+  - DOMAIN-SUFFIX,tmall.com,DIRECT
+  - DOMAIN-SUFFIX,jd.com,DIRECT
