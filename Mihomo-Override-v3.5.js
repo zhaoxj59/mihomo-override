@@ -36,10 +36,13 @@ function main(config) {
   const FCM_GROUP = "FCM 推送";
 
   const REGION_MAP = {
-    "HY2-HY2": "美国", "EVOXT": "马来西亚",
-    "阿里云-Alibaba-HK": "香港", "GUANGDUN": "德国",
-    "CST": "德国", "RAKSmart": "美国",
-    "SHANDUN-shandunhk": "香港", "isvoro-9929": "美国"
+    "HY2-HY2": "美国", "RAKSmart": "美国", "isvoro-9929": "美国",
+    "闪盾-洛杉矶": "美国", "洛杉矶": "美国",
+    "EVOXT": "马来西亚",
+    "阿里云-Alibaba-HK": "香港", "阿里云-香港": "香港",
+    "SHANDUN-shandunhk": "香港", "闪盾-香港": "香港",
+    "GUANGDUN": "德国", "CST": "德国", "闪盾-法兰克福": "德国",
+    "法兰克福": "德国"
   };
 
   function makeIcon(type) {
