@@ -342,15 +342,15 @@ rules:
   # Private / LAN traffic must be handled before other rule sets.
   - RULE-SET,private,DIRECT
 
+  # FCM push has priority over ad lists and broad Google matching.
+  - DOMAIN,mtalk.google.com,FCM 推送
+  - DOMAIN,alt1-mtalk.google.com,FCM 推送
+  - DOMAIN,alt2-mtalk.google.com,FCM 推送
+
   # Ads: select REJECT to block, or DIRECT to disable blocking.
   - RULE-SET,reject,广告拦截
   - RULE-SET,ads-meta,广告拦截
   - RULE-SET,ads-awavenue,广告拦截
-
-  # FCM push must precede broad Google matching.
-  - DOMAIN,mtalk.google.com,FCM 推送
-  - DOMAIN,alt1-mtalk.google.com,FCM 推送
-  - DOMAIN,alt2-mtalk.google.com,FCM 推送
 
   # Google Play is separated from general Google traffic.
   - DOMAIN-SUFFIX,play.google.com,Google Play
