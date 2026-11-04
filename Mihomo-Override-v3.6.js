@@ -38,7 +38,7 @@ function main(config) {
     ? config["proxy-groups"].filter(group => group && typeof group.name === "string")
     : [];
   const REMOTE_RULES = Array.isArray(config.rules)
-    ? config.rules.filter(rule => typeof rule === "string" && !/^MATCH\\s*,/i.test(rule.trim()))
+    ? config.rules.filter(rule => typeof rule === "string" && !/^MATCH\s*,/i.test(rule.trim()))
     : [];
 
   const GROUP = {
