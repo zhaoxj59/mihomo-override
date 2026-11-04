@@ -8,6 +8,80 @@
 # Remote MATCH is omitted; the JS override provides the final fallback.
 # ============================================================
 
+# Temporary business-group stubs: required by 3x-ui route-graph validation.
+# The local v3.5 JS override replaces this entire group list with its own groups.
+# These are NOT region groups and are NOT the final client-side group definitions.
+proxy-groups:
+  - name: "AI"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Google"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "YouTube"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "GitHub"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Microsoft"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Apple"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Telegram"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Twitter"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Meta"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "TikTok"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Netflix"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Disney+"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Spotify"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Steam"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "Emby"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "PikPak"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "PayPal"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "加密货币"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "FCM 推送"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "国内网站"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "国际网站"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "漏网之鱼"
+    type: select
+    proxies: [PROXY, DIRECT]
+  - name: "广告拦截"
+    type: select
+    proxies: [PROXY, DIRECT]
+
 rule-providers:
   reject:
     type: http
