@@ -34,6 +34,10 @@ function main(config) {
     international: "国际网站", fallback: "漏网之鱼", adblock: "广告拦截"
   };
   const FCM_GROUP = "FCM 推送";
+  // 域名白名单：添加确有误拦截的域名，优先于广告规则并直连放行。
+  const AD_WHITELIST = [
+    // "example.com"
+  ];
 
   const REGION_MAP = {
     "HY2-HY2": "美国", "RAKSmart": "美国", "isvoro-9929": "美国",
@@ -152,6 +156,18 @@ function main(config) {
     const [behavior,filename] = providerDefinitions[name];
     ruleProviders[name] = {type:"http",behavior,format:"text",path:"./ruleset/loyalsoldier-"+name+".yaml",url:RULE_BASE+filename,interval:86400};
   });
+  ruleProviders["ads-meta"] = {
+    type:"http",behavior:"domain",format:"mrs",
+    path:"./ruleset/meta-category-ads-all.mrs",
+    url:"https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs",
+    interval:86400
+  };
+  ruleProviders["ads-awavenue"] = {
+    type:"http",behavior:"domain",format:"mrs",
+    path:"./ruleset/awavenue-ads.mrs",
+    url:"https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Clash.mrs",
+    interval:86400
+  };
   const oldProviders = config["rule-providers"] && typeof config["rule-providers"] === "object" && !Array.isArray(config["rule-providers"]) ? config["rule-providers"] : {};
   config["rule-providers"] = {...oldProviders,...ruleProviders};
 
@@ -186,6 +202,16 @@ function main(config) {
 
   const rules = [];
   rules.push("RULE-SET,private,DIRECT");
+  AD_WHITELIST.forEach(domain => {
+    const clean = String(domain).trim().toLowerCase().replace(/^\\.+|\\.+$/g,"");
+    if (clean && /^[a-z0-9.-]+$/.test(clean) && clean.includes(".") && !clean.includes("..")) {
+      rules.push("DOMAIN-SUFFIX,"+clean+",DIRECT");
+    }
+  });
+  // 在 FlClash 的“广告拦截”策略组选择 REJECT 开启，选择 DIRECT 关闭。
+  rules.push("RULE-SET,reject,"+GROUP.adblock);
+  rules.push("RULE-SET,ads-meta,"+GROUP.adblock);
+  rules.push("RULE-SET,ads-awavenue,"+GROUP.adblock);
   FCM_DOMAINS.forEach(domain => rules.push("DOMAIN-SUFFIX,"+domain+","+FCM_GROUP));
   ["services.googleapis.cn","android.clients.google.com","play.googleapis.com","play.google.com","googleapis.cn","gvt1.com","gvt2.com"].forEach(domain => rules.push("DOMAIN-SUFFIX,"+domain+",Google"));
   Object.keys(SERVICES).forEach(serviceName => SERVICES[serviceName].forEach(domain => rules.push("DOMAIN-SUFFIX,"+domain+","+serviceName)));
