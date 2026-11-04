@@ -25,7 +25,7 @@ function main(config) {
     "mode": "rule", "log-level": "info", "unified-delay": true,
     "tcp-concurrent": true, "find-process-mode": "strict"
   };
-  Object.keys(SETTINGS).forEach(key => { config[key] = SETTINGS[key]; });
+  Object.keys(SETTINGS).forEach(key => { if (config[key] === undefined) config[key] = SETTINGS[key]; });
   if (config.ipv6 === undefined) config.ipv6 = false;
   if (!config.hosts || typeof config.hosts !== "object") config.hosts = {};
 
@@ -114,7 +114,18 @@ function main(config) {
   const proxyNames = proxies.map(proxy => proxy && proxy.name).filter(Boolean);
   if (proxyNames.length === 0) throw new Error("没有读取到订阅节点，请检查原始配置");
 
-  const regionGroup = {name:GROUP.region,type:"select",proxies:proxyNames,icon:ICONS.region};
+  // 按节点名称中的已确认关键词自动归类；未匹配的节点统一放入“其他节点”。
+  const regionNames = [...new Set(Object.values(REGION_MAP))];
+  const regionGroups = regionNames.map(region => {
+    const keywords = Object.keys(REGION_MAP).filter(keyword => REGION_MAP[keyword] === region);
+    const names = proxyNames.filter(name => keywords.some(keyword => name.toLowerCase().includes(keyword.toLowerCase())));
+    return {name:region+"节点",type:"select",proxies:names,icon:ICONS.region};
+  }).filter(group => group.proxies.length > 0);
+  const mappedNames = new Set(regionGroups.flatMap(group => group.proxies));
+  const unmappedNames = proxyNames.filter(name => !mappedNames.has(name));
+  const otherRegionGroup = unmappedNames.length ? [{name:"其他节点",type:"select",proxies:unmappedNames,icon:ICONS.region}] : [];
+  const regionGroup = {name:GROUP.region,type:"select",proxies:[...regionGroups.map(group => group.name),...otherRegionGroup.map(group => group.name)],icon:ICONS.region};
+  if (regionGroup.proxies.length === 0) throw new Error("地区分组为空，请检查节点名称与 REGION_MAP");
   const serviceGroups = Object.keys(SERVICES).map(name => ({name,type:"select",proxies:[GROUP.region,...proxyNames],icon:ICONS[name]||ICONS.region}));
   const fcmGroup = {name:FCM_GROUP,type:"select",proxies:["Google",GROUP.region,...proxyNames],icon:ICONS.fcm};
   const otherGroups = [
@@ -123,7 +134,7 @@ function main(config) {
     {name:GROUP.fallback,type:"select",proxies:[GROUP.international,GROUP.domestic,GROUP.region,...proxyNames,"DIRECT"],icon:ICONS.fallback},
     {name:GROUP.adblock,type:"select",proxies:["REJECT","DIRECT",GROUP.region,...proxyNames],icon:ICONS.adblock}
   ];
-  config["proxy-groups"] = [regionGroup,...serviceGroups,fcmGroup,...otherGroups];
+  config["proxy-groups"] = [regionGroup,...regionGroups,...otherRegionGroup,...serviceGroups,fcmGroup,...otherGroups];
 
   const RULE_BASE = "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/";
   const providerDefinitions = {
@@ -156,10 +167,11 @@ function main(config) {
     "+.chatgpt.com":["https://dns.google/dns-query","https://cloudflare-dns.com/dns-query"],
     "+.anthropic.com":["https://dns.google/dns-query","https://cloudflare-dns.com/dns-query"],
     "+.meta.ai":["https://dns.google/dns-query","https://cloudflare-dns.com/dns-query"],
+    "muse.ai":["https://dns.google/dns-query","https://cloudflare-dns.com/dns-query"],
     "+.muse.ai":["https://dns.google/dns-query","https://cloudflare-dns.com/dns-query"]
   };
   config.dns = {
-    ...oldDNS,enable:true,listen:"127.0.0.1:1053",
+    ...oldDNS,enable:true,listen:oldDNS.listen || "127.0.0.1:1053",
     ipv6:oldDNS.ipv6===undefined?false:oldDNS.ipv6,
     "enhanced-mode":"fake-ip","fake-ip-range":"198.18.0.1/16",
     "fake-ip-filter":Array.isArray(oldDNS["fake-ip-filter"])?oldDNS["fake-ip-filter"]:["*.lan","*.local","localhost.ptlogin2.qq.com"],
