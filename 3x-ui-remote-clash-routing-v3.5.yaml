@@ -12,75 +12,146 @@
 # The local v3.5 JS override replaces this entire group list with its own groups.
 # These are NOT region groups and are NOT the final client-side group definitions.
 proxy-groups:
+  # 总入口：所有业务组可通过“地区节点”统一选择出口
+  - name: "全部节点"
+    type: select
+    proxies: [PROXY, DIRECT]
+    include-all-proxies: true
+
+  # 地区分组：保留面板生成的真实节点，不手工写死节点名称
+  - name: "香港节点"
+    type: select
+    proxies: [PROXY, DIRECT]
+    include-all-proxies: true
+    filter: "(?i)(香港|港|HK|Hong.?Kong|ali-vzn3fg8nfp|SHANDUN-shandunhk|闪盾-香港|阿里云)"
+
+  - name: "马来西亚节点"
+    type: select
+    proxies: [PROXY, DIRECT]
+    include-all-proxies: true
+    filter: "(?i)(马来西亚|Malaysia|EVOXT)"
+
+  - name: "德国节点"
+    type: select
+    proxies: [PROXY, DIRECT]
+    include-all-proxies: true
+    filter: "(?i)(德国|法兰克福|Frankfurt|Germany|GUANGDUN|CST)"
+
+  - name: "美国节点"
+    type: select
+    proxies: [PROXY, DIRECT]
+    include-all-proxies: true
+    filter: "(?i)(美国|洛杉矶|Las.?Vegas|西雅图|纽约|United.?States|USA|HY2-HY2|RAKSmart|isvoro-9929|闪盾-洛杉矶)"
+
+  - name: "其他节点"
+    type: select
+    proxies: [PROXY, DIRECT]
+    include-all-proxies: true
+    exclude-filter: "(?i)(香港|港|HK|Hong.?Kong|ali-vzn3fg8nfp|SHANDUN-shandunhk|闪盾-香港|阿里云|马来西亚|Malaysia|EVOXT|德国|法兰克福|Frankfurt|Germany|GUANGDUN|CST|美国|洛杉矶|Las.?Vegas|西雅图|纽约|United.?States|USA|HY2-HY2|RAKSmart|isvoro-9929|闪盾-洛杉矶)"
+
+  - name: "地区节点"
+    type: select
+    proxies:
+      - "全部节点"
+      - "香港节点"
+      - "马来西亚节点"
+      - "德国节点"
+      - "美国节点"
+      - "其他节点"
+      - DIRECT
+
+  # 业务策略组：保留 v3.5 规则所引用的组名
   - name: "AI"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Google"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "YouTube"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "GitHub"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Microsoft"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Apple"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Telegram"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Twitter"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Meta"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "TikTok"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Netflix"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Disney+"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Spotify"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Steam"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "Emby"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "PikPak"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "PayPal"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "加密货币"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "FCM 推送"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["Google", "地区节点", PROXY, DIRECT]
+    include-all-proxies: true
+
   - name: "国内网站"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: [DIRECT, "地区节点", PROXY]
   - name: "国际网站"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "漏网之鱼"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: ["国际网站", "国内网站", "地区节点", PROXY, DIRECT]
+    include-all-proxies: true
   - name: "广告拦截"
     type: select
-    proxies: [PROXY, DIRECT]
+    proxies: [REJECT, DIRECT]
 
 rule-providers:
   reject:
