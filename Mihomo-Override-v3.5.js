@@ -213,9 +213,10 @@ function main(config) {
   rules.push("RULE-SET,ads-meta,"+GROUP.adblock);
   rules.push("RULE-SET,ads-awavenue,"+GROUP.adblock);
   FCM_DOMAINS.forEach(domain => rules.push("DOMAIN-SUFFIX,"+domain+","+FCM_GROUP));
+  // FCM 优先于广告名单，避免误伤 Google 推送连接。
   ["services.googleapis.cn","android.clients.google.com","play.googleapis.com","play.google.com","googleapis.cn","gvt1.com","gvt2.com"].forEach(domain => rules.push("DOMAIN-SUFFIX,"+domain+",Google"));
   Object.keys(SERVICES).forEach(serviceName => SERVICES[serviceName].forEach(domain => rules.push("DOMAIN-SUFFIX,"+domain+","+serviceName)));
-  rules.push("RULE-SET,reject,"+GROUP.adblock);
+
   rules.push("RULE-SET,icloud,Apple");
   rules.push("RULE-SET,apple,DIRECT");
   rules.push("RULE-SET,google,Google");
