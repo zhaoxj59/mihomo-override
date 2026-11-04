@@ -139,7 +139,7 @@ function main(config) {
     {name:GROUP.domestic,type:"select",proxies:["DIRECT",GROUP.region,...proxyNames],icon:ICONS.domestic},
     {name:GROUP.international,type:"select",proxies:[GROUP.region,...proxyNames,"DIRECT"],icon:ICONS.international},
     {name:GROUP.fallback,type:"select",proxies:[GROUP.international,GROUP.domestic,GROUP.region,...proxyNames,"DIRECT"],icon:ICONS.fallback},
-    {name:GROUP.adblock,type:"select",proxies:["REJECT","DIRECT",GROUP.region,...proxyNames],icon:ICONS.adblock}
+    {name:GROUP.adblock,type:"select",proxies:["REJECT","DIRECT"],icon:ICONS.adblock}
   ];
   config["proxy-groups"] = [regionGroup,...regionGroups,...otherRegionGroup,...serviceGroups,fcmGroup,...otherGroups];
 
