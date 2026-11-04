@@ -1,0 +1,427 @@
+# ============================================================
+# 3x-ui 面板 · Clash/Mihomo 全局路由 — v3.5（与原版 JS 覆写同口径）
+#
+# 用法（二选一）：
+# 1. 把本文件的远程地址单独填进面板「设置 → 订阅 → Clash/Mihomo →
+#    全局路由规则」，面板会自己定期拉取；
+# 2. 或把本文件全文粘贴进同一个字段。
+#
+# 本文件只含 proxy-groups / rule-providers / rules 三个顶层键——
+# 这是全局路由字段唯一会导入的三部分。真实节点由面板生成，
+# 切勿自行添加 proxies:，否则会覆盖掉面板生成的节点。
+# DNS / Fake-IP 不在此文件内（该字段不接受），仍由客户端覆写脚本处理。
+#
+# 与 FlClash-Override-v3.5-Remote.js 的对应关系：
+# - 策略组 24 个、规则集 13 个、规则 163 条，与 JS 生成结果逐项一致；
+# - JS 里「组内列出全部真实节点」在 YAML 里写作 include-all-proxies: true，
+#   节点由面板在生成订阅时自动填入，不写死节点名；
+# - 图标与 JS 相同的黑白 SVG。
+# ============================================================
+
+proxy-groups:
+- name: 地区节点
+  type: select
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2223%22%2F%3E%3Cpath%20d%3D%22M9%2032h46M32%209c8%208%208%2038%200%2046M32%209c-8%208-8%2038%200%2046%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: YouTube
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%228%22%20y%3D%2215%22%20width%3D%2248%22%20height%3D%2234%22%20rx%3D%229%22%2F%3E%3Cpath%20d%3D%22m27%2024%2015%208-15%208Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: AI
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M32%207%2037%2024%2054%2018%2044%2033%2057%2043%2038%2042%2032%2058%2026%2042%207%2043%2020%2033%2010%2018%2027%2024Z%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2233%22%20r%3D%225%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: GitHub
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M20%2051c-9-4-12-12-10-22%202-12%2012-19%2022-19s20%207%2022%2019c2%2010-1%2018-10%2022%22%2F%3E%3Cpath%20d%3D%22M22%2050v-9c-6%201-9-2-10-6M42%2050v-9c6%201%209-2%2010-6%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Microsoft
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%2210%22%20y%3D%2210%22%20width%3D%2219%22%20height%3D%2219%22%2F%3E%3Crect%20x%3D%2235%22%20y%3D%2210%22%20width%3D%2219%22%20height%3D%2219%22%2F%3E%3Crect%20x%3D%2210%22%20y%3D%2235%22%20width%3D%2219%22%20height%3D%2219%22%2F%3E%3Crect%20x%3D%2235%22%20y%3D%2235%22%20width%3D%2219%22%20height%3D%2219%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Apple
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M32%2020c-8-10-22-2-20%2014%202%2013%2010%2022%2017%2018%203-2%205-2%208%200%207%204%2015-5%2017-18%202-16-12-24-22-14Z%22%2F%3E%3Cpath%20d%3D%22M34%2017c0-7%205-11%2012-12%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Telegram
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m7%2030%2048-19-11%2043-14-12-9%209-1-16Z%22%2F%3E%3Cpath%20d%3D%22m20%2035%2035-24%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Twitter
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%2012%2052%2052M52%2012%2012%2052%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Meta
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%2039c8-28%2018-29%2024-7%206%2022%2016%2021%2024-7%22%2F%3E%3Cpath%20d%3D%22M8%2039c8%2015%2017%2014%2024-7%207-21%2016-22%2024-7%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: TikTok
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M37%2010v29a10%2010%200%201%201-10-10%22%2F%3E%3Cpath%20d%3D%22M37%2010c2%208%207%2012%2015%2013%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Netflix
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%2212%22%20y%3D%229%22%20width%3D%2240%22%20height%3D%2246%22%20rx%3D%223%22%2F%3E%3Cpath%20d%3D%22M23%2049V15l18%2034V15%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Disney+
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%2042c10-25%2028-31%2048-17M19%2047c10-10%2022-12%2035-5%22%2F%3E%3Cpath%20d%3D%22m32%207%203%208%208%203-8%203-3%208-3-8-8-3%208-3Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Spotify
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2224%22%2F%3E%3Cpath%20d%3D%22M17%2025c11-4%2023-3%2032%202M19%2033c9-3%2019-2%2027%202M22%2041c7-2%2014-1%2020%202%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Steam
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2222%22%2F%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%2224%22%20r%3D%228%22%2F%3E%3Ccircle%20cx%3D%2221%22%20cy%3D%2242%22%20r%3D%226%22%2F%3E%3Cpath%20d%3D%22m26%2039%208-10%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Emby
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%229%22%20y%3D%2212%22%20width%3D%2246%22%20height%3D%2234%22%20rx%3D%224%22%2F%3E%3Cpath%20d%3D%22M24%2054h16M32%2046v8%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: PikPak
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M13%2044a10%2010%200%200%201%202-20%2017%2017%200%200%201%2033%203%209%209%200%200%201%201%2018Z%22%2F%3E%3Cpath%20d%3D%22M25%2034h14M32%2027v14%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: PayPal
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M18%2053%2026%2011h20c10%200%2013%207%2010%2016-3%2010-10%2014-20%2014H25%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: 加密货币
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2223%22%2F%3E%3Cpath%20d%3D%22M25%2017h13a7%207%200%200%201%200%2014H25h14a8%208%200%200%201%200%2016H25M31%2012v40%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: Google
+  type: select
+  proxies:
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2223%22%2F%3E%3Cpath%20d%3D%22M9%2032h46M32%209c8%208%208%2038%200%2046M32%209c-8%208-8%2038%200%2046%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: FCM 推送
+  type: select
+  proxies:
+  - Google
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M18%2043h28l-4-6V27a10%2010%200%200%200-20%200v10Z%22%2F%3E%3Cpath%20d%3D%22M27%2049a5%205%200%200%200%2010%200M32%2010v5%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: 国内网站
+  type: select
+  proxies:
+  - DIRECT
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%2030%2032%2010l24%2020M15%2027v27h34V27M27%2054V38h10v16%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: 国际网站
+  type: select
+  proxies:
+  - 地区节点
+  - DIRECT
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2232%22%20r%3D%2223%22%2F%3E%3Cpath%20d%3D%22M9%2032h46M32%209c8%208%208%2038%200%2046M32%209c-8%208-8%2038%200%2046%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: 漏网之鱼
+  type: select
+  proxies:
+  - 国际网站
+  - 国内网站
+  - 地区节点
+  - DIRECT
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M8%2034c10-17%2029-20%2045-8l7%206-7%206C37%2050%2018%2047%208%2034Z%22%2F%3E%3Ccircle%20cx%3D%2223%22%20cy%3D%2230%22%20r%3D%222%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+- name: 广告拦截
+  type: select
+  proxies:
+  - REJECT
+  - DIRECT
+  - 地区节点
+  include-all-proxies: true
+  icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M32%207%2053%2015v16c0%2014-9%2023-21%2028C20%2054%2011%2045%2011%2031V15Z%22%2F%3E%3Cpath%20d%3D%22m21%2021%2022%2022%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-reject.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
+    interval: 86400
+  icloud:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-icloud.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
+    interval: 86400
+  apple:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-apple.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
+    interval: 86400
+  google:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-google.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
+    interval: 86400
+  proxy:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-proxy.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
+    interval: 86400
+  direct:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-direct.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    interval: 86400
+  private:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-private.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
+    interval: 86400
+  gfw:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-gfw.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
+    interval: 86400
+  tld-not-cn:
+    type: http
+    behavior: domain
+    format: text
+    path: ./ruleset/loyalsoldier-tld-not-cn.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
+    interval: 86400
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    format: text
+    path: ./ruleset/loyalsoldier-telegramcidr.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    interval: 86400
+  lancidr:
+    type: http
+    behavior: ipcidr
+    format: text
+    path: ./ruleset/loyalsoldier-lancidr.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
+    interval: 86400
+  cncidr:
+    type: http
+    behavior: ipcidr
+    format: text
+    path: ./ruleset/loyalsoldier-cncidr.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
+    interval: 86400
+  applications:
+    type: http
+    behavior: classical
+    format: text
+    path: ./ruleset/loyalsoldier-applications.yaml
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt
+    interval: 86400
+rules:
+- RULE-SET,private,DIRECT
+- DOMAIN-SUFFIX,mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt1-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt2-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,services.googleapis.cn,Google
+- DOMAIN-SUFFIX,android.clients.google.com,Google
+- DOMAIN-SUFFIX,play.googleapis.com,Google
+- DOMAIN-SUFFIX,play.google.com,Google
+- DOMAIN-SUFFIX,googleapis.cn,Google
+- DOMAIN-SUFFIX,gvt1.com,Google
+- DOMAIN-SUFFIX,gvt2.com,Google
+- DOMAIN-SUFFIX,youtube.com,YouTube
+- DOMAIN-SUFFIX,youtu.be,YouTube
+- DOMAIN-SUFFIX,ytimg.com,YouTube
+- DOMAIN-SUFFIX,youtube-nocookie.com,YouTube
+- DOMAIN-SUFFIX,googlevideo.com,YouTube
+- DOMAIN-SUFFIX,ggpht.com,YouTube
+- DOMAIN-SUFFIX,openai.com,AI
+- DOMAIN-SUFFIX,chatgpt.com,AI
+- DOMAIN-SUFFIX,oaistatic.com,AI
+- DOMAIN-SUFFIX,oaiusercontent.com,AI
+- DOMAIN-SUFFIX,anthropic.com,AI
+- DOMAIN-SUFFIX,claude.ai,AI
+- DOMAIN-SUFFIX,claudeusercontent.com,AI
+- DOMAIN-SUFFIX,gemini.google.com,AI
+- DOMAIN-SUFFIX,generativelanguage.googleapis.com,AI
+- DOMAIN-SUFFIX,aistudio.google.com,AI
+- DOMAIN-SUFFIX,ai.google.dev,AI
+- DOMAIN-SUFFIX,copilot.microsoft.com,AI
+- DOMAIN-SUFFIX,perplexity.ai,AI
+- DOMAIN-SUFFIX,poe.com,AI
+- DOMAIN-SUFFIX,huggingface.co,AI
+- DOMAIN-SUFFIX,meta.ai,AI
+- DOMAIN-SUFFIX,muse.ai,AI
+- DOMAIN-SUFFIX,github.com,GitHub
+- DOMAIN-SUFFIX,githubusercontent.com,GitHub
+- DOMAIN-SUFFIX,githubassets.com,GitHub
+- DOMAIN-SUFFIX,github.io,GitHub
+- DOMAIN-SUFFIX,github.dev,GitHub
+- DOMAIN-SUFFIX,github.blog,GitHub
+- DOMAIN-SUFFIX,raw.githubusercontent.com,GitHub
+- DOMAIN-SUFFIX,objects.githubusercontent.com,GitHub
+- DOMAIN-SUFFIX,microsoft.com,Microsoft
+- DOMAIN-SUFFIX,microsoftonline.com,Microsoft
+- DOMAIN-SUFFIX,microsoft365.com,Microsoft
+- DOMAIN-SUFFIX,office.com,Microsoft
+- DOMAIN-SUFFIX,office.net,Microsoft
+- DOMAIN-SUFFIX,live.com,Microsoft
+- DOMAIN-SUFFIX,outlook.com,Microsoft
+- DOMAIN-SUFFIX,windows.com,Microsoft
+- DOMAIN-SUFFIX,windowsupdate.com,Microsoft
+- DOMAIN-SUFFIX,xbox.com,Microsoft
+- DOMAIN-SUFFIX,xboxlive.com,Microsoft
+- DOMAIN-SUFFIX,bing.com,Microsoft
+- DOMAIN-SUFFIX,msn.com,Microsoft
+- DOMAIN-SUFFIX,onedrive.com,Microsoft
+- DOMAIN-SUFFIX,sharepoint.com,Microsoft
+- DOMAIN-SUFFIX,azure.com,Microsoft
+- DOMAIN-SUFFIX,visualstudio.com,Microsoft
+- DOMAIN-SUFFIX,apple.com,Apple
+- DOMAIN-SUFFIX,icloud.com,Apple
+- DOMAIN-SUFFIX,icloud-content.com,Apple
+- DOMAIN-SUFFIX,mzstatic.com,Apple
+- DOMAIN-SUFFIX,apple-cloudkit.com,Apple
+- DOMAIN-SUFFIX,apple-dns.net,Apple
+- DOMAIN-SUFFIX,itunes.com,Apple
+- DOMAIN-SUFFIX,itunes.apple.com,Apple
+- DOMAIN-SUFFIX,apps.apple.com,Apple
+- DOMAIN-SUFFIX,t.me,Telegram
+- DOMAIN-SUFFIX,telegram.org,Telegram
+- DOMAIN-SUFFIX,telegram.me,Telegram
+- DOMAIN-SUFFIX,telegram.dog,Telegram
+- DOMAIN-SUFFIX,telegra.ph,Telegram
+- DOMAIN-SUFFIX,tdesktop.com,Telegram
+- DOMAIN-SUFFIX,x.com,Twitter
+- DOMAIN-SUFFIX,twitter.com,Twitter
+- DOMAIN-SUFFIX,t.co,Twitter
+- DOMAIN-SUFFIX,twimg.com,Twitter
+- DOMAIN-SUFFIX,twittercdn.com,Twitter
+- DOMAIN-SUFFIX,facebook.com,Meta
+- DOMAIN-SUFFIX,facebook.net,Meta
+- DOMAIN-SUFFIX,fb.com,Meta
+- DOMAIN-SUFFIX,fbcdn.net,Meta
+- DOMAIN-SUFFIX,instagram.com,Meta
+- DOMAIN-SUFFIX,cdninstagram.com,Meta
+- DOMAIN-SUFFIX,threads.net,Meta
+- DOMAIN-SUFFIX,messenger.com,Meta
+- DOMAIN-SUFFIX,whatsapp.com,Meta
+- DOMAIN-SUFFIX,whatsapp.net,Meta
+- DOMAIN-SUFFIX,tiktok.com,TikTok
+- DOMAIN-SUFFIX,tiktokv.com,TikTok
+- DOMAIN-SUFFIX,tiktokcdn.com,TikTok
+- DOMAIN-SUFFIX,tiktokcdn-us.com,TikTok
+- DOMAIN-SUFFIX,byteoversea.com,TikTok
+- DOMAIN-SUFFIX,ibytedtos.com,TikTok
+- DOMAIN-SUFFIX,musical.ly,TikTok
+- DOMAIN-SUFFIX,ttwstatic.com,TikTok
+- DOMAIN-SUFFIX,netflix.com,Netflix
+- DOMAIN-SUFFIX,netflix.net,Netflix
+- DOMAIN-SUFFIX,nflxext.com,Netflix
+- DOMAIN-SUFFIX,nflximg.com,Netflix
+- DOMAIN-SUFFIX,nflximg.net,Netflix
+- DOMAIN-SUFFIX,nflxvideo.net,Netflix
+- DOMAIN-SUFFIX,nflxso.net,Netflix
+- DOMAIN-SUFFIX,nflxsearch.net,Netflix
+- DOMAIN-SUFFIX,disneyplus.com,Disney+
+- DOMAIN-SUFFIX,disney-plus.net,Disney+
+- DOMAIN-SUFFIX,disneystreaming.com,Disney+
+- DOMAIN-SUFFIX,bamgrid.com,Disney+
+- DOMAIN-SUFFIX,dssott.com,Disney+
+- DOMAIN-SUFFIX,starott.com,Disney+
+- DOMAIN-SUFFIX,spotify.com,Spotify
+- DOMAIN-SUFFIX,scdn.co,Spotify
+- DOMAIN-SUFFIX,spotifycdn.com,Spotify
+- DOMAIN-SUFFIX,spotifycdn.net,Spotify
+- DOMAIN-SUFFIX,pscdn.co,Spotify
+- DOMAIN-SUFFIX,steampowered.com,Steam
+- DOMAIN-SUFFIX,steamcommunity.com,Steam
+- DOMAIN-SUFFIX,steamstatic.com,Steam
+- DOMAIN-SUFFIX,steamcontent.com,Steam
+- DOMAIN-SUFFIX,steam-chat.com,Steam
+- DOMAIN-SUFFIX,steamgames.com,Steam
+- DOMAIN-SUFFIX,steamusercontent.com,Steam
+- DOMAIN-SUFFIX,steam.tv,Steam
+- DOMAIN-SUFFIX,emby.media,Emby
+- DOMAIN-SUFFIX,mypikpak.com,PikPak
+- DOMAIN-SUFFIX,pikpak.me,PikPak
+- DOMAIN-SUFFIX,mypikpak.net,PikPak
+- DOMAIN-SUFFIX,paypal.com,PayPal
+- DOMAIN-SUFFIX,paypalobjects.com,PayPal
+- DOMAIN-SUFFIX,paypal.me,PayPal
+- DOMAIN-SUFFIX,binance.com,加密货币
+- DOMAIN-SUFFIX,binance.org,加密货币
+- DOMAIN-SUFFIX,coinbase.com,加密货币
+- DOMAIN-SUFFIX,kraken.com,加密货币
+- DOMAIN-SUFFIX,okx.com,加密货币
+- DOMAIN-SUFFIX,bybit.com,加密货币
+- DOMAIN-SUFFIX,kucoin.com,加密货币
+- DOMAIN-SUFFIX,google.com,Google
+- DOMAIN-SUFFIX,googleapis.com,Google
+- DOMAIN-SUFFIX,gstatic.com,Google
+- DOMAIN-SUFFIX,googleusercontent.com,Google
+- DOMAIN-SUFFIX,android.com,Google
+- DOMAIN-SUFFIX,android.clients.google.com,Google
+- DOMAIN-SUFFIX,play.google.com,Google
+- DOMAIN-SUFFIX,play.googleapis.com,Google
+- DOMAIN-SUFFIX,services.googleapis.cn,Google
+- DOMAIN-SUFFIX,gvt1.com,Google
+- DOMAIN-SUFFIX,gvt2.com,Google
+- RULE-SET,reject,广告拦截
+- RULE-SET,icloud,Apple
+- RULE-SET,apple,DIRECT
+- RULE-SET,google,Google
+- RULE-SET,telegramcidr,Telegram,no-resolve
+- RULE-SET,direct,国内网站
+- RULE-SET,cncidr,国内网站,no-resolve
+- RULE-SET,lancidr,DIRECT,no-resolve
+- RULE-SET,applications,DIRECT
+- RULE-SET,proxy,国际网站
+- RULE-SET,gfw,国际网站
+- RULE-SET,tld-not-cn,国际网站
+- GEOIP,CN,国内网站,no-resolve
+- MATCH,漏网之鱼
