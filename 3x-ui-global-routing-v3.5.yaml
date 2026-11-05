@@ -1,5 +1,5 @@
 # ============================================================
-# 3x-ui 面板 · Clash/Mihomo 全局路由 — v3.5（与原版 JS 覆写同口径）
+# 3x-ui 面板 · Clash/Mihomo 全局路由 — v3.5.1（与 JS 覆写同口径）
 #
 # 用法（二选一）：
 # 1. 把本文件的远程地址单独填进面板「设置 → 订阅 → Clash/Mihomo →
@@ -9,12 +9,17 @@
 # 本文件只含 proxy-groups / rule-providers / rules 三个顶层键——
 # 这是全局路由字段唯一会导入的三部分。真实节点由面板生成，
 # 切勿自行添加 proxies:，否则会覆盖掉面板生成的节点。
-# DNS / Fake-IP 不在此文件内（该字段不接受），仍由客户端覆写脚本处理。
+# DNS / Fake-IP 不在此文件内（该字段不接受）：v3.5.1 的 DNS 改进
+# （fallback 国外 DoH、fake-ip-filter 补全）只在 JS 覆写里生效。
 #
-# 与 FlClash-Override-v3.5-Remote.js 的对应关系：
-# - 策略组 24 个、规则集 13 个、规则 163 条，与 JS 生成结果逐项一致；
+# 与 FlClash-Override-v3.5-Remote.js（v3.5.1）的对应关系：
+# - 策略组 24 个、规则集 14 个、规则 170 条，与 JS 生成结果逐项一致；
+# - 广告规则（reject + category-ads-all）已前置到业务规则之前，
+#   「广告拦截」组只保留 REJECT / DIRECT；
+# - FCM 已补齐 alt1–alt8-mtalk 共 9 个域名；
 # - JS 里「组内列出全部真实节点」在 YAML 里写作 include-all-proxies: true，
 #   节点由面板在生成订阅时自动填入，不写死节点名；
+# - 地区节点保持扁平单组（简洁优先），不做地区子分组；
 # - 图标与 JS 相同的黑白 SVG。
 # ============================================================
 
@@ -166,8 +171,6 @@ proxy-groups:
   proxies:
   - REJECT
   - DIRECT
-  - 地区节点
-  include-all-proxies: true
   icon: data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%23111111%22%20stroke-width%3D%223.2%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M32%207%2053%2015v16c0%2014-9%2023-21%2028C20%2054%2011%2045%2011%2031V15Z%22%2F%3E%3Cpath%20d%3D%22m21%2021%2022%2022%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E
 rule-providers:
   reject:
@@ -261,11 +264,26 @@ rule-providers:
     path: ./ruleset/loyalsoldier-applications.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt
     interval: 86400
+  ads-meta:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/category-ads-all.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs
+    interval: 86400
 rules:
 - RULE-SET,private,DIRECT
 - DOMAIN-SUFFIX,mtalk.google.com,FCM 推送
 - DOMAIN-SUFFIX,alt1-mtalk.google.com,FCM 推送
 - DOMAIN-SUFFIX,alt2-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt3-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt4-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt5-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt6-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt7-mtalk.google.com,FCM 推送
+- DOMAIN-SUFFIX,alt8-mtalk.google.com,FCM 推送
+- RULE-SET,reject,广告拦截
+- RULE-SET,ads-meta,广告拦截
 - DOMAIN-SUFFIX,services.googleapis.cn,Google
 - DOMAIN-SUFFIX,android.clients.google.com,Google
 - DOMAIN-SUFFIX,play.googleapis.com,Google
@@ -411,7 +429,6 @@ rules:
 - DOMAIN-SUFFIX,services.googleapis.cn,Google
 - DOMAIN-SUFFIX,gvt1.com,Google
 - DOMAIN-SUFFIX,gvt2.com,Google
-- RULE-SET,reject,广告拦截
 - RULE-SET,icloud,Apple
 - RULE-SET,apple,DIRECT
 - RULE-SET,google,Google

@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5
+ * Mihomo / FlClash Override v3.5.1
  *
  * 黑白极简几何风格
  *
@@ -15,6 +15,13 @@
  * 10. Fake-IP DNS
  * 11. 黑白 SVG 几何图标
  * 12. 修复 no-resolve 完整性检查
+ * 13. DNS 增加 fallback 国外 DoH（geoip 过滤），fake-ip-filter 补全
+ * 14. 广告拦截增强：新增 category-ads-all 规则集并前置到业务规则之前，广告组只保留 REJECT/DIRECT
+ * 15. FCM 推送补齐 alt3–alt8-mtalk 域名
+ * 16. 基础设置改为仅在原配置未设置时填写，不再覆盖面板/订阅已有值
+ *
+ * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
+ * REGION_MAP 仅作节点地区备忘保留。
  */
 
 function main(config) {
@@ -38,7 +45,9 @@ function main(config) {
   };
 
   Object.keys(SETTINGS).forEach(key => {
-    config[key] = SETTINGS[key];
+    if (config[key] === undefined) {
+      config[key] = SETTINGS[key];
+    }
   });
 
   if (config.ipv6 === undefined) {
@@ -422,7 +431,13 @@ function main(config) {
   const FCM_DOMAINS = [
     "mtalk.google.com",
     "alt1-mtalk.google.com",
-    "alt2-mtalk.google.com"
+    "alt2-mtalk.google.com",
+    "alt3-mtalk.google.com",
+    "alt4-mtalk.google.com",
+    "alt5-mtalk.google.com",
+    "alt6-mtalk.google.com",
+    "alt7-mtalk.google.com",
+    "alt8-mtalk.google.com"
   ];
 
   // ============================================================
@@ -511,9 +526,7 @@ function main(config) {
       type: "select",
       proxies: [
         "REJECT",
-        "DIRECT",
-        GROUP.region,
-        ...proxyNames
+        "DIRECT"
       ],
       icon: ICONS.adblock
     }
@@ -563,6 +576,16 @@ function main(config) {
       interval: 86400
     };
   });
+
+  // 补充广告规则集：MetaCubeX category-ads-all（二进制 mrs，覆盖更广）
+  ruleProviders["ads-meta"] = {
+    type: "http",
+    behavior: "domain",
+    format: "mrs",
+    path: "./ruleset/category-ads-all.mrs",
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs",
+    interval: 86400
+  };
 
   const oldProviders =
     config["rule-providers"] &&
@@ -659,7 +682,7 @@ function main(config) {
   config.dns = {
     ...oldDNS,
     enable: true,
-    listen: "127.0.0.1:1053",
+    listen: oldDNS.listen || "127.0.0.1:1053",
     ipv6: oldDNS.ipv6 === undefined ? false : oldDNS.ipv6,
     "enhanced-mode": "fake-ip",
     "fake-ip-range": "198.18.0.1/16",
@@ -669,7 +692,17 @@ function main(config) {
       : [
           "*.lan",
           "*.local",
-          "localhost.ptlogin2.qq.com"
+          "*.arpa",
+          "time.*.com",
+          "time.*.gov",
+          "ntp.*.com",
+          "+.pool.ntp.org",
+          "localhost.ptlogin2.qq.com",
+          "*.msftncsi.com",
+          "www.msftconnecttest.com",
+          "stun.*.*",
+          "*.stun.*.*",
+          "*.stun.*.*.*"
         ],
 
     nameserver: [
@@ -688,6 +721,20 @@ function main(config) {
     ],
 
     "direct-nameserver-follow-policy": true,
+
+    fallback: [
+      "https://dns.google/dns-query",
+      "https://cloudflare-dns.com/dns-query"
+    ],
+
+    "fallback-filter": {
+      geoip: true,
+      "geoip-code": "CN",
+      ipcidr: [
+        "240.0.0.0/4"
+      ]
+    },
+
     "nameserver-policy": dnsPolicy
   };
 
@@ -706,6 +753,11 @@ function main(config) {
       "DOMAIN-SUFFIX," + domain + "," + FCM_GROUP
     );
   });
+
+  // 广告拦截（紧跟 FCM 之后、业务规则之前，避免被业务组先行接走；
+  // FCM 排在广告之前，防止推送域名被广告名单误伤）
+  rules.push("RULE-SET,reject," + GROUP.adblock);
+  rules.push("RULE-SET,ads-meta," + GROUP.adblock);
 
   // Google Play 特定规则
   [
@@ -731,9 +783,6 @@ function main(config) {
       );
     });
   });
-
-  // 广告拦截
-  rules.push("RULE-SET,reject," + GROUP.adblock);
 
   // Apple
   rules.push("RULE-SET,icloud,Apple");
