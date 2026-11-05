@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5.1
+ * Mihomo / FlClash Override v3.5.2
  *
  * 黑白极简几何风格
  *
@@ -19,6 +19,9 @@
  * 14. 广告拦截增强：新增 category-ads-all 规则集并前置到业务规则之前，广告组只保留 REJECT/DIRECT
  * 15. FCM 推送补齐 alt3–alt8-mtalk 域名
  * 16. 基础设置改为仅在原配置未设置时填写，不再覆盖面板/订阅已有值
+ * 17. 新增 MetaCubeX geosite/cn 规则集补国内域名覆盖（排在 direct 名单之后），
+ *     修复国内站漏名单后被兜底送出国、被网站 WAF 以 405 阻断的问题
+ * 18. cncidr 与 GEOIP,CN 去掉 no-resolve，Fake-IP 下 IP 兜底真正生效
  *
  * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -587,6 +590,16 @@ function main(config) {
     interval: 86400
   };
 
+  // 补充国内域名规则集：MetaCubeX geosite/cn（与 Loyalsoldier direct 名单互补）
+  ruleProviders["geosite-cn"] = {
+    type: "http",
+    behavior: "domain",
+    format: "mrs",
+    path: "./ruleset/geosite-cn.mrs",
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs",
+    interval: 86400
+  };
+
   const oldProviders =
     config["rule-providers"] &&
     typeof config["rule-providers"] === "object" &&
@@ -794,10 +807,12 @@ function main(config) {
   // Telegram IP
   rules.push("RULE-SET,telegramcidr,Telegram,no-resolve");
 
-  // 国内网站
+  // 国内网站（geosite-cn 紧跟 direct 名单补漏；
+  // cncidr 不带 no-resolve，让名单外国内站按解析 IP 兜底直连）
   rules.push("RULE-SET,direct," + GROUP.domestic);
+  rules.push("RULE-SET,geosite-cn," + GROUP.domestic);
   rules.push(
-    "RULE-SET,cncidr," + GROUP.domestic + ",no-resolve"
+    "RULE-SET,cncidr," + GROUP.domestic
   );
 
   // 局域网及应用
@@ -809,9 +824,9 @@ function main(config) {
   rules.push("RULE-SET,gfw," + GROUP.international);
   rules.push("RULE-SET,tld-not-cn," + GROUP.international);
 
-  // 中国大陆 IP
+  // 中国大陆 IP（不带 no-resolve，域名请求也会解析后按 IP 判断）
   rules.push(
-    "GEOIP,CN," + GROUP.domestic + ",no-resolve"
+    "GEOIP,CN," + GROUP.domestic
   );
 
   // 兜底

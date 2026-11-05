@@ -1,5 +1,5 @@
 # ============================================================
-# 3x-ui 面板 · Clash/Mihomo 全局路由 — v3.5.1（与 JS 覆写同口径）
+# 3x-ui 面板 · Clash/Mihomo 全局路由 — v3.5.2（与 JS 覆写同口径）
 #
 # 用法（二选一）：
 # 1. 把本文件的远程地址单独填进面板「设置 → 订阅 → Clash/Mihomo →
@@ -9,11 +9,13 @@
 # 本文件只含 proxy-groups / rule-providers / rules 三个顶层键——
 # 这是全局路由字段唯一会导入的三部分。真实节点由面板生成，
 # 切勿自行添加 proxies:，否则会覆盖掉面板生成的节点。
-# DNS / Fake-IP 不在此文件内（该字段不接受）：v3.5.1 的 DNS 改进
+# DNS / Fake-IP 不在此文件内（该字段不接受）：DNS 改进
 # （fallback 国外 DoH、fake-ip-filter 补全）只在 JS 覆写里生效。
 #
-# 与 FlClash-Override-v3.5-Remote.js（v3.5.1）的对应关系：
-# - 策略组 24 个、规则集 14 个、规则 170 条，与 JS 生成结果逐项一致；
+# 与 FlClash-Override-v3.5-Remote.js（v3.5.2）的对应关系：
+# - 策略组 24 个、规则集 15 个、规则 171 条，与 JS 生成结果逐项一致；
+# - 国内段新增 geosite/cn 规则集补 direct 名单的漏，cncidr 与 GEOIP,CN
+#   已去掉 no-resolve，名单外国内站可按解析 IP 兜底直连；
 # - 广告规则（reject + category-ads-all）已前置到业务规则之前，
 #   「广告拦截」组只保留 REJECT / DIRECT；
 # - FCM 已补齐 alt1–alt8-mtalk 共 9 个域名；
@@ -271,6 +273,13 @@ rule-providers:
     path: ./ruleset/category-ads-all.mrs
     url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs
     interval: 86400
+  geosite-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    path: ./ruleset/geosite-cn.mrs
+    url: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs
+    interval: 86400
 rules:
 - RULE-SET,private,DIRECT
 - DOMAIN-SUFFIX,mtalk.google.com,FCM 推送
@@ -434,11 +443,12 @@ rules:
 - RULE-SET,google,Google
 - RULE-SET,telegramcidr,Telegram,no-resolve
 - RULE-SET,direct,国内网站
-- RULE-SET,cncidr,国内网站,no-resolve
+- RULE-SET,geosite-cn,国内网站
+- RULE-SET,cncidr,国内网站
 - RULE-SET,lancidr,DIRECT,no-resolve
 - RULE-SET,applications,DIRECT
 - RULE-SET,proxy,国际网站
 - RULE-SET,gfw,国际网站
 - RULE-SET,tld-not-cn,国际网站
-- GEOIP,CN,国内网站,no-resolve
+- GEOIP,CN,国内网站
 - MATCH,漏网之鱼
