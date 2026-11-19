@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5.2
+ * Mihomo / FlClash Override v3.5.3
  *
  * 黑白极简几何风格
  *
@@ -22,6 +22,9 @@
  * 17. 新增 MetaCubeX geosite/cn 规则集补国内域名覆盖（排在 direct 名单之后），
  *     修复国内站漏名单后被兜底送出国、被网站 WAF 以 405 阻断的问题
  * 18. cncidr 与 GEOIP,CN 去掉 no-resolve，Fake-IP 下 IP 兜底真正生效
+ * 19. 修复 Loyalsoldier 13 个规则集 format:text→yaml（上游实为 YAML payload，text 会被内核逐行误解析、规则近乎为空）
+ * 20. Emby 组新增 emby.9527.new.tg（用户自建服务器域名；此前只认 emby.media，该域名掉到 MATCH 走国际网站）
+ * 21. AI 组新增 hatch.metaaivm.com（Muse 后台域名；此前掉到 MATCH 走漏网之鱼）
  *
  * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -260,6 +263,7 @@ function main(config) {
       "poe.com",
       "huggingface.co",
       "meta.ai",
+      "hatch.metaaivm.com",
       "muse.ai"
     ],
 
@@ -387,7 +391,8 @@ function main(config) {
     ],
 
     Emby: [
-      "emby.media"
+      "emby.media",
+      "emby.9527.new.tg"
     ],
 
     PikPak: [
@@ -573,7 +578,7 @@ function main(config) {
     ruleProviders[name] = {
       type: "http",
       behavior: behavior,
-      format: "text",
+      format: "yaml",
       path: "./ruleset/loyalsoldier-" + name + ".yaml",
       url: RULE_BASE + filename,
       interval: 86400

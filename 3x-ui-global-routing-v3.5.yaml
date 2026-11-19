@@ -1,5 +1,5 @@
 # ============================================================
-# 3x-ui 面板 · Clash/Mihomo 全局路由 — v3.5.2（与 JS 覆写同口径）
+# 3x-ui 面板 · Clash/Mihomo 全局路由 — v3.5.3（与 JS 覆写同口径）
 #
 # 用法（二选一）：
 # 1. 把本文件的远程地址单独填进面板「设置 → 订阅 → Clash/Mihomo →
@@ -12,10 +12,13 @@
 # DNS / Fake-IP 不在此文件内（该字段不接受）：DNS 改进
 # （fallback 国外 DoH、fake-ip-filter 补全）只在 JS 覆写里生效。
 #
-# 与 FlClash-Override-v3.5-Remote.js（v3.5.2）的对应关系：
-# - 策略组 24 个、规则集 15 个、规则 171 条，与 JS 生成结果逐项一致；
+# 与 FlClash-Override-v3.5-Remote.js（v3.5.3）的对应关系：
+# - 策略组 24 个、规则集 15 个、规则 173 条，与 JS 生成结果逐项一致；
 # - 国内段新增 geosite/cn 规则集补 direct 名单的漏，cncidr 与 GEOIP,CN
 #   已去掉 no-resolve，名单外国内站可按解析 IP 兜底直连；
+# - 13 个 Loyalsoldier 规则集 format:text→yaml（与 JS 同改；上游实为 YAML payload）；
+# - Emby 组新增 emby.9527.new.tg（与 JS 同改；此前只认 emby.media）；
+# - AI 组新增 hatch.metaaivm.com（与 JS 同改；Muse 后台域名）；
 # - 广告规则（reject + category-ads-all）已前置到业务规则之前，
 #   「广告拦截」组只保留 REJECT / DIRECT；
 # - FCM 已补齐 alt1–alt8-mtalk 共 9 个域名；
@@ -178,91 +181,91 @@ rule-providers:
   reject:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-reject.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt
     interval: 86400
   icloud:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-icloud.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt
     interval: 86400
   apple:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-apple.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt
     interval: 86400
   google:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-google.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt
     interval: 86400
   proxy:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-proxy.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt
     interval: 86400
   direct:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-direct.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
     interval: 86400
   private:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-private.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt
     interval: 86400
   gfw:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-gfw.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/gfw.txt
     interval: 86400
   tld-not-cn:
     type: http
     behavior: domain
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-tld-not-cn.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/tld-not-cn.txt
     interval: 86400
   telegramcidr:
     type: http
     behavior: ipcidr
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-telegramcidr.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
     interval: 86400
   lancidr:
     type: http
     behavior: ipcidr
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-lancidr.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt
     interval: 86400
   cncidr:
     type: http
     behavior: ipcidr
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-cncidr.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt
     interval: 86400
   applications:
     type: http
     behavior: classical
-    format: text
+    format: yaml
     path: ./ruleset/loyalsoldier-applications.yaml
     url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/applications.txt
     interval: 86400
@@ -322,6 +325,7 @@ rules:
 - DOMAIN-SUFFIX,poe.com,AI
 - DOMAIN-SUFFIX,huggingface.co,AI
 - DOMAIN-SUFFIX,meta.ai,AI
+- DOMAIN-SUFFIX,hatch.metaaivm.com,AI
 - DOMAIN-SUFFIX,muse.ai,AI
 - DOMAIN-SUFFIX,github.com,GitHub
 - DOMAIN-SUFFIX,githubusercontent.com,GitHub
@@ -414,6 +418,7 @@ rules:
 - DOMAIN-SUFFIX,steamusercontent.com,Steam
 - DOMAIN-SUFFIX,steam.tv,Steam
 - DOMAIN-SUFFIX,emby.media,Emby
+- DOMAIN-SUFFIX,emby.9527.new.tg,Emby
 - DOMAIN-SUFFIX,mypikpak.com,PikPak
 - DOMAIN-SUFFIX,pikpak.me,PikPak
 - DOMAIN-SUFFIX,mypikpak.net,PikPak
