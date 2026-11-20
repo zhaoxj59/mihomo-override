@@ -1,0 +1,180 @@
++rule-providers:
+  OC-ads:
+    type: http
+    behavior: domain
+    format: mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ads-all.mrs"
+    path: "./ruleset/oc-ads.mrs"
+    interval: 86400
+  OC-cn:
+    type: http
+    behavior: domain
+    format: mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"
+    path: "./ruleset/oc-cn.mrs"
+    interval: 86400
+
++proxy-groups:
+  - name: OC-Proxy
+    type: select
+    proxies:
+      - Proxy
+      - DIRECT
+  - name: OC-AI
+    type: select
+    proxies:
+      - OC-Proxy
+      - Proxy
+      - DIRECT
+  - name: OC-Muse
+    type: select
+    proxies:
+      - OC-Proxy
+      - Proxy
+      - DIRECT
+  - name: OC-Google
+    type: select
+    proxies:
+      - OC-Proxy
+      - Proxy
+      - DIRECT
+  - name: OC-FCM
+    type: select
+    proxies:
+      - OC-Google
+      - OC-Proxy
+      - Proxy
+      - DIRECT
+  - name: OC-Streaming
+    type: select
+    proxies:
+      - OC-Proxy
+      - Proxy
+      - DIRECT
+  - name: OC-Social
+    type: select
+    proxies:
+      - OC-Proxy
+      - Proxy
+      - DIRECT
+  - name: OC-Ads
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+  - name: OC-Domestic
+    type: select
+    proxies:
+      - DIRECT
+      - Proxy
+  - name: OC-Fallback
+    type: select
+    proxies:
+      - OC-Proxy
+      - Proxy
+      - DIRECT
+
++rules:
+  - RULE-SET,OC-ads,OC-Ads
+  - DOMAIN-SUFFIX,muse.ai,OC-Muse
+  - DOMAIN-SUFFIX,meta.ai,OC-Muse
+  - DOMAIN-SUFFIX,metaaivm.com,OC-Muse
+  - DOMAIN-SUFFIX,hatch.metaaivm.com,OC-Muse
+  - DOMAIN-SUFFIX,openai.com,OC-AI
+  - DOMAIN-SUFFIX,chatgpt.com,OC-AI
+  - DOMAIN-SUFFIX,oaistatic.com,OC-AI
+  - DOMAIN-SUFFIX,oaiusercontent.com,OC-AI
+  - DOMAIN-SUFFIX,anthropic.com,OC-AI
+  - DOMAIN-SUFFIX,claude.ai,OC-AI
+  - DOMAIN-SUFFIX,claudeusercontent.com,OC-AI
+  - DOMAIN-SUFFIX,perplexity.ai,OC-AI
+  - DOMAIN-SUFFIX,poe.com,OC-AI
+  - DOMAIN-SUFFIX,huggingface.co,OC-AI
+  - DOMAIN-SUFFIX,gemini.google.com,OC-AI
+  - DOMAIN-SUFFIX,generativelanguage.googleapis.com,OC-AI
+  - DOMAIN-SUFFIX,aistudio.google.com,OC-AI
+  - DOMAIN-SUFFIX,ai.google.dev,OC-AI
+  - DOMAIN-SUFFIX,copilot.microsoft.com,OC-AI
+  - DOMAIN-SUFFIX,play.google.com,OC-Google
+  - DOMAIN-SUFFIX,play.googleapis.com,OC-Google
+  - DOMAIN-SUFFIX,android.clients.google.com,OC-Google
+  - DOMAIN-SUFFIX,services.googleapis.cn,OC-Google
+  - DOMAIN-SUFFIX,googleapis.cn,OC-Google
+  - DOMAIN-SUFFIX,mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt1-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt2-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt3-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt4-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt5-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt6-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt7-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,alt8-mtalk.google.com,OC-FCM
+  - DOMAIN-SUFFIX,youtube.com,OC-Streaming
+  - DOMAIN-SUFFIX,youtu.be,OC-Streaming
+  - DOMAIN-SUFFIX,ytimg.com,OC-Streaming
+  - DOMAIN-SUFFIX,youtube-nocookie.com,OC-Streaming
+  - DOMAIN-SUFFIX,googlevideo.com,OC-Streaming
+  - DOMAIN-SUFFIX,ggpht.com,OC-Streaming
+  - DOMAIN-SUFFIX,netflix.com,OC-Streaming
+  - DOMAIN-SUFFIX,netflix.net,OC-Streaming
+  - DOMAIN-SUFFIX,nflxext.com,OC-Streaming
+  - DOMAIN-SUFFIX,nflximg.com,OC-Streaming
+  - DOMAIN-SUFFIX,nflximg.net,OC-Streaming
+  - DOMAIN-SUFFIX,nflxvideo.net,OC-Streaming
+  - DOMAIN-SUFFIX,nflxso.net,OC-Streaming
+  - DOMAIN-SUFFIX,disneyplus.com,OC-Streaming
+  - DOMAIN-SUFFIX,disney-plus.net,OC-Streaming
+  - DOMAIN-SUFFIX,disneystreaming.com,OC-Streaming
+  - DOMAIN-SUFFIX,bamgrid.com,OC-Streaming
+  - DOMAIN-SUFFIX,dssott.com,OC-Streaming
+  - DOMAIN-SUFFIX,starott.com,OC-Streaming
+  - DOMAIN-SUFFIX,spotify.com,OC-Streaming
+  - DOMAIN-SUFFIX,scdn.co,OC-Streaming
+  - DOMAIN-SUFFIX,spotifycdn.com,OC-Streaming
+  - DOMAIN-SUFFIX,spotifycdn.net,OC-Streaming
+  - DOMAIN-SUFFIX,pscdn.co,OC-Streaming
+  - DOMAIN-SUFFIX,telegram.org,OC-Social
+  - DOMAIN-SUFFIX,t.me,OC-Social
+  - DOMAIN-SUFFIX,telegram.me,OC-Social
+  - DOMAIN-SUFFIX,telegram.dog,OC-Social
+  - DOMAIN-SUFFIX,telegra.ph,OC-Social
+  - DOMAIN-SUFFIX,tdesktop.com,OC-Social
+  - DOMAIN-SUFFIX,x.com,OC-Social
+  - DOMAIN-SUFFIX,twitter.com,OC-Social
+  - DOMAIN-SUFFIX,t.co,OC-Social
+  - DOMAIN-SUFFIX,twimg.com,OC-Social
+  - DOMAIN-SUFFIX,facebook.com,OC-Social
+  - DOMAIN-SUFFIX,facebook.net,OC-Social
+  - DOMAIN-SUFFIX,fb.com,OC-Social
+  - DOMAIN-SUFFIX,fbcdn.net,OC-Social
+  - DOMAIN-SUFFIX,instagram.com,OC-Social
+  - DOMAIN-SUFFIX,cdninstagram.com,OC-Social
+  - DOMAIN-SUFFIX,threads.net,OC-Social
+  - DOMAIN-SUFFIX,messenger.com,OC-Social
+  - DOMAIN-SUFFIX,whatsapp.com,OC-Social
+  - DOMAIN-SUFFIX,whatsapp.net,OC-Social
+  - DOMAIN-SUFFIX,tiktok.com,OC-Social
+  - DOMAIN-SUFFIX,tiktokv.com,OC-Social
+  - DOMAIN-SUFFIX,tiktokcdn.com,OC-Social
+  - DOMAIN-SUFFIX,tiktokcdn-us.com,OC-Social
+  - DOMAIN-SUFFIX,byteoversea.com,OC-Social
+  - DOMAIN-SUFFIX,ibytedtos.com,OC-Social
+  - DOMAIN-SUFFIX,musical.ly,OC-Social
+  - DOMAIN-SUFFIX,ttwstatic.com,OC-Social
+  - DOMAIN-SUFFIX,github.com,OC-Proxy
+  - DOMAIN-SUFFIX,githubusercontent.com,OC-Proxy
+  - DOMAIN-SUFFIX,githubassets.com,OC-Proxy
+  - DOMAIN-SUFFIX,github.io,OC-Proxy
+  - DOMAIN-SUFFIX,github.dev,OC-Proxy
+  - DOMAIN-SUFFIX,github.blog,OC-Proxy
+  - DOMAIN-SUFFIX,raw.githubusercontent.com,OC-Proxy
+  - DOMAIN-SUFFIX,objects.githubusercontent.com,OC-Proxy
+  - DOMAIN-SUFFIX,binance.com,OC-Proxy
+  - DOMAIN-SUFFIX,binance.org,OC-Proxy
+  - DOMAIN-SUFFIX,coinbase.com,OC-Proxy
+  - DOMAIN-SUFFIX,kraken.com,OC-Proxy
+  - DOMAIN-SUFFIX,okx.com,OC-Proxy
+  - DOMAIN-SUFFIX,bybit.com,OC-Proxy
+  - DOMAIN-SUFFIX,kucoin.com,OC-Proxy
+  - RULE-SET,OC-cn,OC-Domestic
+  - MATCH,OC-Fallback
