@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5.6
+ * Mihomo / FlClash Override v3.5.7
  *
  * 黑白极简几何风格
  *
@@ -33,6 +33,8 @@
  * 24. TUN 改为直接替换整个对象（v3.5.5 的“仅未设置时填”不生效）：实测对照发现，
  *     FlClash/订阅已带 tun.stack=system，“仅未设置”改不掉它，system 栈下 dns-hijack 不劫持，
  *     DNS 仍直连联通泄露；AIsouler 是整段替换、强制 stack=mips 才生效，故照抄整段替换
+ * 25. DNS升级：国内DoH强制DIRECT，国外DoH经地区节点；补default/proxy-server-nameserver
+ *     与fallback策略；节点域名bootstrap使用国内DNS IP；保留并扩充fake-ip-filter
  *
  * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -640,7 +642,10 @@ function main(config) {
   };
 
   // ============================================================
-  // 十、DNS 配置
+  // ============================================================
+  // 十、DNS 防泄漏配置（v3.5.7）
+  // 国内 DNS 使用加密 DoH 直连；国外 DoH 明确经“地区节点”代理。
+  // 节点域名 bootstrap 仅使用国内 DNS IP，避免代理/DNS 递归依赖。
   // ============================================================
 
   const oldDNS =
@@ -655,80 +660,58 @@ function main(config) {
       ? oldDNS["nameserver-policy"]
       : {};
 
+  const domesticDoH = [
+    "https://dns.alidns.com/dns-query#DIRECT",
+    "https://doh.pub/dns-query#DIRECT"
+  ];
+
+  const proxyDoH = [
+    "https://cloudflare-dns.com/dns-query#地区节点",
+    "https://dns.google/dns-query#地区节点"
+  ];
+
   const dnsPolicy = {
     ...oldPolicy,
-
-    "+.cn": [
-      "https://dns.alidns.com/dns-query",
-      "https://doh.pub/dns-query"
-    ],
-
-    "+.中国": [
-      "https://dns.alidns.com/dns-query",
-      "https://doh.pub/dns-query"
-    ],
-
-    "+.google.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.googleapis.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.youtube.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.netflix.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.disneyplus.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.openai.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.chatgpt.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.anthropic.com": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.meta.ai": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
-    "+.muse.ai": [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ]
+    "+.cn": domesticDoH,
+    "+.中国": domesticDoH,
+    "+.google.com": proxyDoH,
+    "+.googleapis.com": proxyDoH,
+    "+.youtube.com": proxyDoH,
+    "+.netflix.com": proxyDoH,
+    "+.disneyplus.com": proxyDoH,
+    "+.openai.com": proxyDoH,
+    "+.chatgpt.com": proxyDoH,
+    "+.anthropic.com": proxyDoH,
+    "+.meta.ai": proxyDoH,
+    "+.muse.ai": proxyDoH
   };
+
+  const defaultDNS = ["223.5.5.5", "119.29.29.29"];
 
   config.dns = {
     ...oldDNS,
     enable: true,
     listen: oldDNS.listen || "127.0.0.1:1053",
-    ipv6: oldDNS.ipv6 === undefined ? false : oldDNS.ipv6,
+    ipv6: false,
     "enhanced-mode": "fake-ip",
     "fake-ip-range": "198.18.0.1/16",
-
     "fake-ip-filter": Array.isArray(oldDNS["fake-ip-filter"])
-      ? oldDNS["fake-ip-filter"]
+      ? [...new Set([
+          ...oldDNS["fake-ip-filter"],
+          "*.lan",
+          "*.local",
+          "*.arpa",
+          "time.*.com",
+          "time.*.gov",
+          "ntp.*.com",
+          "+.pool.ntp.org",
+          "localhost.ptlogin2.qq.com",
+          "*.msftncsi.com",
+          "www.msftconnecttest.com",
+          "stun.*.*",
+          "*.stun.*.*",
+          "*.stun.*.*.*"
+        ])]
       : [
           "*.lan",
           "*.local",
@@ -744,41 +727,24 @@ function main(config) {
           "*.stun.*.*",
           "*.stun.*.*.*"
         ],
-
-    nameserver: [
-      "https://dns.alidns.com/dns-query",
-      "https://doh.pub/dns-query"
-    ],
-
-    "proxy-server-nameserver": [
-      "https://dns.alidns.com/dns-query",
-      "https://doh.pub/dns-query"
-    ],
-
-    "direct-nameserver": [
-      "https://dns.alidns.com/dns-query",
-      "https://doh.pub/dns-query"
-    ],
-
-    "direct-nameserver-follow-policy": true,
-
-    fallback: [
-      "https://dns.google/dns-query",
-      "https://cloudflare-dns.com/dns-query"
-    ],
-
+    "default-nameserver": defaultDNS,
+    "proxy-server-nameserver": defaultDNS,
+    nameserver: proxyDoH,
+    fallback: proxyDoH,
     "fallback-filter": {
       geoip: true,
       "geoip-code": "CN",
-      ipcidr: [
-        "240.0.0.0/4"
-      ]
+      ipcidr: ["240.0.0.0/4"]
     },
-
-    "nameserver-policy": dnsPolicy
+    "nameserver-policy": {
+      ...dnsPolicy,
+      "rule-set:private": "system",
+      "rule-set:geosite-cn": domesticDoH
+    },
+    "direct-nameserver": domesticDoH,
+    "direct-nameserver-follow-policy": true
   };
 
-  // ============================================================
   // 十一、分流规则
   // ============================================================
 
