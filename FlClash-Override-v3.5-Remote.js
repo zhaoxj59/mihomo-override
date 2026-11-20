@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5.4
+ * Mihomo / FlClash Override v3.5.5
  *
  * 黑白极简几何风格
  *
@@ -27,6 +27,9 @@
  * 21. AI 组新增 hatch.metaaivm.com（Muse 后台域名；此前掉到 MATCH 走漏网之鱼）
  * 22. TUN 增加 dns-hijack（劫持全部 UDP/TCP 53 端口 DNS 查询走 Mihomo），修复 DNS 泄露：
  *     此前只配了 DNS 服务器地址、没配劫持，DNS 直连运营商（联通）泄露；AIsouler 脚本有此行故不漏
+ * 23. TUN 改为完整配置（v3.5.4 只加 dns-hijack 不生效）：照抄 AIsouler 脚本整段 TUN
+ *    （stack mips + auto-route + strict-route + auto-redirect + auto-detect-interface + dns-hijack），
+ *     仅 dns-hijack 不够，须整段配齐才劫持生效
  *
  * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -62,10 +65,29 @@ function main(config) {
     config.ipv6 = false;
   }
 
-  // TUN DNS 劫持（v3.5.4）：强制全部 DNS 查询（UDP/TCP 53）走 Mihomo，防 DNS 泄露。
-  // 只配 DNS 服务器地址、不配劫持时，DNS 会直连运营商泄露；仅在未设置时填写，不覆盖已有值。
+  // TUN 完整配置（v3.5.5）：强制全部 DNS 查询（UDP/TCP 53）走 Mihomo，防 DNS 泄露。
+  // v3.5.4 只加 dns-hijack 不生效；AIsouler 脚本是整段 TUN 全配（含 stack mips 与路由选项）才生效，故照抄整段。
+  // 仅在未设置时填写，不覆盖已有值。
   if (!config.tun || typeof config.tun !== "object") {
     config.tun = {};
+  }
+  if (config.tun.enable === undefined) {
+    config.tun.enable = true;
+  }
+  if (config.tun.stack === undefined) {
+    config.tun.stack = "mips";
+  }
+  if (config.tun["auto-route"] === undefined) {
+    config.tun["auto-route"] = true;
+  }
+  if (config.tun["strict-route"] === undefined) {
+    config.tun["strict-route"] = true;
+  }
+  if (config.tun["auto-redirect"] === undefined) {
+    config.tun["auto-redirect"] = true;
+  }
+  if (config.tun["auto-detect-interface"] === undefined) {
+    config.tun["auto-detect-interface"] = true;
   }
   if (config.tun["dns-hijack"] === undefined) {
     config.tun["dns-hijack"] = ["any:53", "tcp://any:53"];
