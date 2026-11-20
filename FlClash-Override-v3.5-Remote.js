@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5.5
+ * Mihomo / FlClash Override v3.5.6
  *
  * 黑白极简几何风格
  *
@@ -30,6 +30,9 @@
  * 23. TUN 改为完整配置（v3.5.4 只加 dns-hijack 不生效）：照抄 AIsouler 脚本整段 TUN
  *    （stack mips + auto-route + strict-route + auto-redirect + auto-detect-interface + dns-hijack），
  *     仅 dns-hijack 不够，须整段配齐才劫持生效
+ * 24. TUN 改为直接替换整个对象（v3.5.5 的“仅未设置时填”不生效）：实测对照发现，
+ *     FlClash/订阅已带 tun.stack=system，“仅未设置”改不掉它，system 栈下 dns-hijack 不劫持，
+ *     DNS 仍直连联通泄露；AIsouler 是整段替换、强制 stack=mips 才生效，故照抄整段替换
  *
  * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -65,33 +68,19 @@ function main(config) {
     config.ipv6 = false;
   }
 
-  // TUN 完整配置（v3.5.5）：强制全部 DNS 查询（UDP/TCP 53）走 Mihomo，防 DNS 泄露。
-  // v3.5.4 只加 dns-hijack 不生效；AIsouler 脚本是整段 TUN 全配（含 stack mips 与路由选项）才生效，故照抄整段。
-  // 仅在未设置时填写，不覆盖已有值。
-  if (!config.tun || typeof config.tun !== "object") {
-    config.tun = {};
-  }
-  if (config.tun.enable === undefined) {
-    config.tun.enable = true;
-  }
-  if (config.tun.stack === undefined) {
-    config.tun.stack = "mips";
-  }
-  if (config.tun["auto-route"] === undefined) {
-    config.tun["auto-route"] = true;
-  }
-  if (config.tun["strict-route"] === undefined) {
-    config.tun["strict-route"] = true;
-  }
-  if (config.tun["auto-redirect"] === undefined) {
-    config.tun["auto-redirect"] = true;
-  }
-  if (config.tun["auto-detect-interface"] === undefined) {
-    config.tun["auto-detect-interface"] = true;
-  }
-  if (config.tun["dns-hijack"] === undefined) {
-    config.tun["dns-hijack"] = ["any:53", "tcp://any:53"];
-  }
+  // TUN 完整配置（v3.5.6）：直接替换整个 tun 对象，照抄 AIsouler 脚本。
+  // v3.5.5 的“仅未设置时填”不生效：FlClash/订阅已带 tun.stack=system，
+  // “仅未设置”改不掉它，system 栈下 dns-hijack 不劫持，DNS 仍直连联通泄露。
+  // AIsouler 是整段替换、强制 stack=mips 才生效，故照抄整段替换。
+  config.tun = {
+    enable: true,
+    stack: "mips",
+    "auto-route": true,
+    "strict-route": true,
+    "auto-redirect": true,
+    "auto-detect-interface": true,
+    "dns-hijack": ["any:53", "tcp://any:53"]
+  };
 
   if (!config.hosts || typeof config.hosts !== "object") {
     config.hosts = {};
