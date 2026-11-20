@@ -8,7 +8,7 @@
  * 3. 所有真实节点统一进入地区节点手动选择组
  * 4. 业务组支持选择地区节点或单个真实节点
  * 5. 不使用自动测速及负载均衡
- * 6. muse.ai 归入 AI 业务组
+ * 6. Muse 域名独立分流策略组（v3.5.8）
  * 7. Google Play 独立分流
  * 8. FCM 推送独立分流
  * 9. Loyalsoldier 官方 13 个规则集
@@ -698,8 +698,7 @@ function main(config) {
     "+.anthropic.com": proxyDoH,
     "+.meta.ai": proxyDoH,
     "+.muse.ai": proxyDoH,
-    "+.metaaivm.com": proxyDoH,
-    "+.muse.ai": proxyDoH
+    "+.metaaivm.com": proxyDoH
   };
 
   const defaultDNS = ["223.5.5.5", "119.29.29.29"];
