@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5.3
+ * Mihomo / FlClash Override v3.5.4
  *
  * 黑白极简几何风格
  *
@@ -25,6 +25,8 @@
  * 19. 修复 Loyalsoldier 13 个规则集 format:text→yaml（上游实为 YAML payload，text 会被内核逐行误解析、规则近乎为空）
  * 20. Emby 组新增 emby.9527.new.tg（用户自建服务器域名；此前只认 emby.media，该域名掉到 MATCH 走国际网站）
  * 21. AI 组新增 hatch.metaaivm.com（Muse 后台域名；此前掉到 MATCH 走漏网之鱼）
+ * 22. TUN 增加 dns-hijack（劫持全部 UDP/TCP 53 端口 DNS 查询走 Mihomo），修复 DNS 泄露：
+ *     此前只配了 DNS 服务器地址、没配劫持，DNS 直连运营商（联通）泄露；AIsouler 脚本有此行故不漏
  *
  * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -58,6 +60,15 @@ function main(config) {
 
   if (config.ipv6 === undefined) {
     config.ipv6 = false;
+  }
+
+  // TUN DNS 劫持（v3.5.4）：强制全部 DNS 查询（UDP/TCP 53）走 Mihomo，防 DNS 泄露。
+  // 只配 DNS 服务器地址、不配劫持时，DNS 会直连运营商泄露；仅在未设置时填写，不覆盖已有值。
+  if (!config.tun || typeof config.tun !== "object") {
+    config.tun = {};
+  }
+  if (config.tun["dns-hijack"] === undefined) {
+    config.tun["dns-hijack"] = ["any:53", "tcp://any:53"];
   }
 
   if (!config.hosts || typeof config.hosts !== "object") {
