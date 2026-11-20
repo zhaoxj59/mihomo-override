@@ -1,5 +1,5 @@
 /**
- * Mihomo / FlClash Override v3.5.7
+ * Mihomo / FlClash Override v3.5.8
  *
  * 黑白极简几何风格
  *
@@ -36,7 +36,11 @@
  * 25. DNS升级：国内DoH强制DIRECT，国外DoH经地区节点；补default/proxy-server-nameserver
  *     与fallback策略；节点域名bootstrap使用国内DNS IP；保留并扩充fake-ip-filter
  *
- * 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
+ * 26. Muse 独立策略组：登录期间可固定选择节点，避免自动切换
+// 27. Muse 域名从通用 AI 组拆分，单独分流
+// 28. Muse DNS 策略补齐，相关域名解析走代理 DNS
+//
+// 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
  */
 
@@ -101,6 +105,7 @@ function main(config) {
   };
 
   const FCM_GROUP = "FCM 推送";
+  const MUSE_GROUP = "Muse专用";
 
   // ============================================================
   // 三、地区映射
@@ -285,10 +290,7 @@ function main(config) {
       "copilot.microsoft.com",
       "perplexity.ai",
       "poe.com",
-      "huggingface.co",
-      "meta.ai",
-      "hatch.metaaivm.com",
-      "muse.ai"
+      "huggingface.co"
     ],
 
     GitHub: [
@@ -489,6 +491,10 @@ function main(config) {
   }
 
   // ============================================================
+  // Muse / Meta AI 独立分流域名
+  const MUSE_DOMAINS = ["muse.ai", "meta.ai", "metaaivm.com", "hatch.metaaivm.com"];
+
+  // ============================================================
   // 八、生成策略组
   // ============================================================
 
@@ -518,6 +524,13 @@ function main(config) {
       ...proxyNames
     ],
     icon: ICONS.fcm
+  };
+
+  const museGroup = {
+    name: MUSE_GROUP,
+    type: "select",
+    proxies: [GROUP.region, ...proxyNames],
+    icon: ICONS.Meta
   };
 
   const otherGroups = [
@@ -568,6 +581,7 @@ function main(config) {
     regionGroup,
     ...serviceGroups,
     fcmGroup,
+    museGroup,
     ...otherGroups
   ];
 
@@ -683,6 +697,8 @@ function main(config) {
     "+.chatgpt.com": proxyDoH,
     "+.anthropic.com": proxyDoH,
     "+.meta.ai": proxyDoH,
+    "+.muse.ai": proxyDoH,
+    "+.metaaivm.com": proxyDoH,
     "+.muse.ai": proxyDoH
   };
 
@@ -780,8 +796,12 @@ function main(config) {
     );
   });
 
+  // Muse 专用规则优先于通用业务规则
+  MUSE_DOMAINS.forEach(domain => {
+    rules.push("DOMAIN-SUFFIX," + domain + "," + MUSE_GROUP);
+  });
+
   // 业务分流
-  // muse.ai 已加入 AI，优先于国际网站规则
   Object.keys(SERVICES).forEach(serviceName => {
     SERVICES[serviceName].forEach(domain => {
       rules.push(
