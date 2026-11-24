@@ -483,10 +483,12 @@ function main(config) {
     : [];
 
   // SG-HY2 修复：订阅里的 HY2 缺 skip-cert-verify，自签证书校验会失败
+  // 面板版 HY2 用的是 sg.886.cc.cd 的真证书，SNI 也要改成这个域名，否则证书校验对不上
   // 在这里强制补上，FlClash 更新订阅后就能直接用
   proxies.forEach(proxy => {
     if (proxy && proxy.name === "SG-HY2" && proxy.type === "hysteria2") {
       proxy["skip-cert-verify"] = true;
+      proxy.sni = "sg.886.cc.cd";
     }
   });
 
