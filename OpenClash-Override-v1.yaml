@@ -73,13 +73,6 @@
       - OC-Proxy
       - PROXY
       - DIRECT
-  - name: OC-Auto
-    type: url-test
-    url: https://www.google.com/generate_204
-    interval: 300
-    proxies:
-      - PROXY
-      - DIRECT
 
 +rules:
   - RULE-SET,OC-ads,OC-Ads
