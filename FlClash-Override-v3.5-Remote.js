@@ -39,6 +39,7 @@
  * 26. Muse 独立策略组：登录期间可固定选择节点，避免自动切换
 // 27. Muse 域名从通用 AI 组拆分，单独分流
 // 28. Muse DNS 策略补齐，相关域名解析走代理 DNS
+// 29. Emby 组新增 feimu.tv（SenPlayer 用的站；此前掉到 MATCH 走漏网之鱼、经香港 NAT，流量 0B/s 不通）
 //
 // 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -418,7 +419,8 @@ function main(config) {
 
     Emby: [
       "emby.media",
-      "emby.9527.new.tg"
+      "emby.9527.new.tg",
+      "feimu.tv"
     ],
 
     PikPak: [
