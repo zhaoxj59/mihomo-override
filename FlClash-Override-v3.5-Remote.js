@@ -40,6 +40,7 @@
 // 27. Muse 域名从通用 AI 组拆分，单独分流
 // 28. Muse DNS 策略补齐，相关域名解析走代理 DNS
 // 29. Emby 组新增 feimu.tv（SenPlayer 用的站；此前掉到 MATCH 走漏网之鱼、经香港 NAT，流量 0B/s 不通）
+// 30. Google 组新增 google.com.hk、google.de、google.co.jp、google.com.sg（各国 Google 域名；此前只认 google.com，google.com.hk 掉到 MATCH 走国际网站、经阿里云-443-NAT，Google 搜索闪回首页不通；德国节点下 google.de 同理）
 //
 // 注：地区节点按用户要求保持扁平单组（简洁优先），不做地区子分组，
  * REGION_MAP 仅作节点地区备忘保留。
@@ -447,6 +448,10 @@ function main(config) {
 
     Google: [
       "google.com",
+      "google.com.hk",
+      "google.de",
+      "google.co.jp",
+      "google.com.sg",
       "googleapis.com",
       "gstatic.com",
       "googleusercontent.com",
